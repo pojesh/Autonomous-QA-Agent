@@ -8,16 +8,45 @@ API_URL = "http://localhost:8000/api/v1"
 st.set_page_config(
     page_title="Autonomous QA Agent",
     page_icon="🤖",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # Custom CSS
 st.markdown("""
 <style>
-    .stButton>button {
+    .stButton > button {
         width: 100%;
+        border-radius: 10px;
+        padding: 10px 20px; /* Adjusted padding */
+        margin: 5px 0px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+        border: 1px solid #41444c; /* Changed border color to match generation buttons */
+        color: white; /* Default text color changed to white */
+        background-color: transparent; /* Make default background transparent */
     }
+    /* Hover effect for navigation buttons */
+    .stButton > button:hover {
+        background-color: #23272f; /* Match primary button hover background */
+        border-color: #51545c; /* Match primary button hover border */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        color: white; /* Match primary button hover text color */
+    }
+
+    /* Primary button styling (Build Knowledge Base, Generate Test Cases, Generate Script) */
+    button[kind="primary"] {
+        background-color: #131720 !important; /* New fill color */
+        color: white !important; /* White text for contrast */
+        border-color: #41444c !important; /* New border color */
+    }
+    button[kind="primary"]:hover {
+        background-color: #23272f !important; /* Slightly darker for hover */
+        border-color: #51545c !important; /* Slightly darker for hover */
+    }
+
+    /* Other existing styles */
     .reportview-container {
         background: #f0f2f6;
     }
@@ -25,7 +54,13 @@ st.markdown("""
         font-size: 2.5rem;
         color: #4B5563;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
+    }
+    .st-emotion-cache-70k1oh {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f9fafb;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -33,19 +68,28 @@ st.markdown("""
 # Session State Initialization
 if 'ingested_files' not in st.session_state:
     st.session_state.ingested_files = []
+if 'page' not in st.session_state:
+    st.session_state.page = "Knowledge Base"
 
 def main():
     st.markdown('<h1 class="main-header">🤖 Autonomous QA Agent</h1>', unsafe_allow_html=True)
     
-    # Sidebar for Navigation
-    page = st.sidebar.radio("Navigation", ["Knowledge Base", "Test Case Agent", "Script Generator"])
+    # Navigation buttons
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🧠 Knowledge Base", use_container_width=True):
+            st.session_state.page = "Knowledge Base"
+    with col2:
+        if st.button("🧪 Test Case Generation", use_container_width=True):
+            st.session_state.page = "Test Cases"
     
-    if page == "Knowledge Base":
+    st.markdown("---")
+
+    # Page rendering
+    if st.session_state.page == "Knowledge Base":
         render_knowledge_base_page()
-    elif page == "Test Case Agent":
+    elif st.session_state.page == "Test Cases":
         render_test_case_agent_page()
-    elif page == "Script Generator":
-        render_script_generator_page()
 
 def render_knowledge_base_page():
     st.header("📚 Build Knowledge Base")
@@ -74,15 +118,15 @@ def render_knowledge_base_page():
                     success_count = sum(1 for r in results if r['status'] == 'success')
                     if success_count > 0:
                         st.success(f"Successfully ingested {success_count} files!")
-                        for res in results:
-                            if res['status'] == 'success':
-                                st.session_state.ingested_files.append(res['filename'])
-                            else:
-                                st.error(f"Error processing {res['filename']}: {res['message']}")
+                        st.session_state.ingested_files.extend([r['filename'] for r in results if r['status'] == 'success'])
                     else:
-                        st.error("Failed to ingest files.")
+                        st.error("Failed to ingest any files.")
+                    
+                    for res in results:
+                        if res['status'] != 'success':
+                            st.error(f"Error processing {res['filename']}: {res['message']}")
                 else:
-                    st.error(f"Server Error: {response.status_code}")
+                    st.error(f"Server Error: {response.status_code} - {response.text}")
             except requests.exceptions.ConnectionError:
                 st.error("Could not connect to backend server. Is it running?")
             except Exception as e:
@@ -90,13 +134,12 @@ def render_knowledge_base_page():
 
     if st.session_state.ingested_files:
         st.subheader("Ingested Files")
-        for file in st.session_state.ingested_files:
+        for file in sorted(list(set(st.session_state.ingested_files))):
             st.text(f"✅ {file}")
 
 def render_test_case_agent_page():
     st.header("🕵️ Test Case Generation Agent")
     
-    # Chat Interface
     query = st.text_input("Describe the feature you want to test:", placeholder="e.g., Generate test cases for the discount code feature")
     
     if st.button("Generate Test Cases", type="primary"):
@@ -116,44 +159,46 @@ def render_test_case_agent_page():
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
 
-    # Display Test Cases
     if 'generated_test_cases' in st.session_state and st.session_state.generated_test_cases:
         st.subheader("Generated Test Cases")
         
         for i, tc in enumerate(st.session_state.generated_test_cases):
-            with st.expander(f"{tc['test_id']}: {tc['test_scenario']} ({tc['test_type']})"):
-                st.markdown(f"**Feature:** {tc['feature']}")
-                st.markdown(f"**Expected Result:** {tc['expected_result']}")
-                st.markdown(f"**Grounded In:** `{tc['grounded_in']}`")
+            with st.expander(f"{tc.get('test_id', 'N/A')}: {tc.get('test_scenario', 'No Scenario')} ({tc.get('test_type', 'N/A')})"):
+                st.markdown(f"**Feature:** {tc.get('feature', 'N/A')}")
+                st.markdown(f"**Expected Result:** {tc.get('expected_result', 'N/A')}")
+                st.markdown(f"**Grounded In:** `{tc.get('grounded_in', 'N/A')}`")
                 
-                # Generate Script Button for this test case
-                if st.button(f"Generate Script for {tc['test_id']}", key=f"btn_{i}"):
-                    with st.spinner(f"Generating Selenium script for {tc['test_id']}..."):
+                if st.button(f"Generate Script for {tc.get('test_id', 'N/A')}", key=f"btn_{i}", type="primary"):
+                    with st.spinner(f"Generating Selenium script for {tc.get('test_id', 'N/A')}..."):
                         try:
                             res = requests.post(f"{API_URL}/generation/script", json={"test_case": tc})
                             if res.status_code == 200:
                                 script_data = res.json()
-                                st.session_state[f"script_{tc['test_id']}"] = script_data['script']
+                                st.session_state[f"script_{tc.get('test_id', 'N/A')}"] = script_data.get('script')
                             else:
                                 st.error(f"Error: {res.text}")
                         except Exception as e:
                             st.error(f"An error occurred: {str(e)}")
                 
-                # Display Script if generated
-                if f"script_{tc['test_id']}" in st.session_state:
+                if st.session_state.get(f"script_{tc.get('test_id', 'N/A')}"):
                     st.markdown("### 🐍 Selenium Script")
-                    st.code(st.session_state[f"script_{tc['test_id']}"], language="python")
-
-def render_script_generator_page():
-    st.header("💻 Script Generator")
-    st.info("Please use the 'Test Case Agent' page to generate scripts directly from test cases.")
-    
-    if 'generated_test_cases' in st.session_state and st.session_state.generated_test_cases:
-        st.markdown("### Available Test Cases")
-        for tc in st.session_state.generated_test_cases:
-             st.text(f"{tc['test_id']}: {tc['test_scenario']}")
-
-
+                    
+                    script_code = st.session_state[f"script_{tc.get('test_id', 'N/A')}"]
+                    test_id = tc.get('test_id', 'N/A')
+                    test_scenario = tc.get('test_scenario', 'No Scenario')
+                    file_content = f"# Test Case: {test_scenario}\n\n{script_code}"
+                    
+                    # Place download button in a column to the left of the code block
+                    col1, _ = st.columns([1, 4])
+                    with col1:
+                        st.download_button(
+                            label="Download Script",
+                            data=file_content,
+                            file_name=f"{test_id}.py",
+                            mime="text/python"
+                        )
+                    
+                    st.code(script_code, language="python")
 
 if __name__ == "__main__":
     main()
