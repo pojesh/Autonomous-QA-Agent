@@ -21,7 +21,7 @@ class TestDiscountCodeFeature(unittest.TestCase):
         cls.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         cls.driver.maximize_window()
         # Replace with the actual checkout page URL
-        cls.base_url = "http://localhost:8000/checkout"
+        cls.base_url = "https://pojesh.github.io/Test-Site/"
         cls.driver.get(cls.base_url)
         cls.wait = WebDriverWait(cls.driver, 15)
 
