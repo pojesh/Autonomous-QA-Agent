@@ -1,0 +1,19 @@
+{
+    "serviceName": "Checkout API Service",
+    "version": "v1",
+    "baseUrl": "https://www.google.com/search?q=https://api.techgear-shop.com/v1",
+    "endpoints": [{
+        "path": "/cart/validate-coupon",
+        "method": "POST",
+        "description": "Validates a discount code and returns the modifier.",
+        "requestBody": {"code": "string"},
+        "responses": {"200": {"valid": true,"discountType": "PERCENT | SHIPPING","value": 0.15},"404": {"valid": false,"error": "Invalid coupon code"}}
+        }, {
+        "path": "/orders/submit",
+        "method": "POST",
+        "description": "Processes the final order transaction.",
+        "requestBody": {"customer": {"name": "string (required)","email": "string (email format)","address": "string (required)"},"cartItems": [{ "productId": "int", "qty": "int" }],"paymentMethod": "credit_card | paypal","shippingMethod": "standard | express"},
+        "responses": {"201": {"status": "success","orderId": "ORD-99283","message": "Payment Successful!"},"400": {"status": "error","message": "Validation Failed"}}
+        }
+    ]
+}

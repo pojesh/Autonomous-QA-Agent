@@ -1,0 +1,29 @@
+UI/UX Guidelines - Checkout Module
+
+1. Color Palette & visual Hierarchy
+primary-action-color: #16a34a (Green-600) hover-state-color: #15803d (Green-700) error-color:
+#dc2626 (Red-600) neutral-border: #e5e7eb (Gray-200)
+
+2. Button Behaviors
+The "Pay Now" button must always be green (class: btn-primary).
+"Add to Cart" buttons should be blue to differentiate from the final checkout action.
+During the 'Processing' state (after click), the button must be disabled to prevent double
+submission.
+
+3. Form Validation (Error States)
+Validation must occur on "Submit" (click of Pay Now button).
+Invalid Inputs:
+-The input border must turn red (#dc2626).
+-A helper text message must appear directly below the failed input field.
+-The helper text must be red.
+
+4. Success Feedback
+Upon successful validation and simulated processing:
+Do NOT redirect the user.
+Display a success message container with ID "success-message".
+Text content: "Payment Successful!"
+Background color: Light Green (#dcfce7).
+
+5. Responsive Layout
+Desktop (>768px): Two-column layout. Left column = Cart/Products; Right column = Form.
+Mobile (<768px): Single column layout. Stacked vertically.
