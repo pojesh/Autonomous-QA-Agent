@@ -47,17 +47,21 @@ async def process_file(file: UploadFile) -> int:
             loader = UnstructuredMarkdownLoader(tmp_path)
             documents = loader.load()
         elif ext == ".json":
-            # JSON handling might need specific jq_schema depending on structure
-            # For now, generic text loading or custom logic might be better
-            # Using a simple text loader for JSON content if structure varies
             import json
             with open(tmp_path, 'r') as f:
                 text = json.dumps(json.load(f), indent=2)
             from langchain_core.documents import Document
             documents = [Document(page_content=text, metadata={"source": file.filename})]
         elif ext == ".html":
-            loader = BSHTMLLoader(tmp_path)
-            documents = loader.load()
+            #loader = BSHTMLLoader(tmp_path)
+            #documents = loader.load()
+            with open(tmp_path, 'r', encoding='utf-8') as f:
+                raw_html = f.read()
+                from langchain_core.documents import Document
+                documents = [Document(
+                    page_content=raw_html, 
+                    metadata={"source": file.filename, "type": "html_source"}
+                )]
         elif ext == ".txt":
             from langchain_community.document_loaders import TextLoader
             loader = TextLoader(tmp_path)
