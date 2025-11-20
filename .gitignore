@@ -1,0 +1,11 @@
+# python environment
+venv/
+
+#env variables
+.env 
+
+# python cache folder
+__pycache__
+
+
+
