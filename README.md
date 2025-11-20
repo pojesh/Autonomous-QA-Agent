@@ -1,2 +1,96 @@
-# Autonomous-QA-Agent
-Webapp QA Agent for Test Case and Script Generation
+# Autonomous QA Agent
+
+An intelligent, autonomous QA agent capable of constructing a "testing brain" from project documentation. It generates test cases and executable Selenium scripts using Groq LLM and Milvus vector database.
+
+## Features
+
+- **Knowledge Base Ingestion**: Upload PDF, Markdown, JSON, HTML files to build a vector knowledge base.
+- **Test Case Generation**: Generate comprehensive test cases grounded in your documentation.
+- **Selenium Script Generation**: Convert test cases into runnable Python Selenium scripts.
+- **Modern UI**: Built with Streamlit for a seamless user experience.
+- **Robust Backend**: FastAPI backend with modular architecture and structured logging.
+
+## Prerequisites
+
+- Python 3.9+
+- [Groq API Key](https://console.groq.com/)
+- [Milvus Zilliz Cloud](https://zilliz.com/) (URI and Token)
+
+## Setup
+
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd Autonomous-QA-Agent
+    ```
+
+2.  **Create a virtual environment**:
+    ```bash
+    python -m venv venv
+    # Windows
+    .\venv\Scripts\activate
+    # Linux/Mac
+    source venv/bin/activate
+    ```
+
+3.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Configure Environment**:
+    - Rename `.env.example` to `.env` (or create `.env`).
+    - Add your API keys:
+        ```env
+        GROQ_API_KEY=your_groq_api_key
+        MILVUS_URI=your_milvus_uri
+        MILVUS_TOKEN=your_milvus_token
+        LOG_LEVEL=INFO
+        ```
+
+## Running the Application
+
+You can run both the backend and frontend using the provided script:
+
+**Windows**:
+```bash
+run.bat
+```
+
+**Manual Start**:
+
+1.  **Start Backend**:
+    ```bash
+    uvicorn backend.main:app --reload --port 8000
+    ```
+
+2.  **Start Frontend** (in a new terminal):
+    ```bash
+    streamlit run frontend/app.py
+    ```
+
+## Usage
+
+1.  **Build Knowledge Base**:
+    - Go to the "Knowledge Base" page.
+    - Upload your `product_specs.md`, `ui_ux_guide.txt`, and `checkout.html`.
+    - Click "Build Knowledge Base".
+
+2.  **Generate Test Cases**:
+    - Go to "Test Case Agent".
+    - Enter a query like "Generate test cases for the discount code feature".
+    - View the generated test cases.
+
+3.  **Generate Scripts**:
+    - Expand a test case card.
+    - Click "Generate Script".
+    - Copy the generated Python Selenium script.
+
+## Project Structure
+
+- `backend/`: FastAPI application
+    - `api/`: Routers and Schemas
+    - `core/`: Configuration and Logging
+    - `services/`: Business logic (Ingestion, RAG)
+- `frontend/`: Streamlit application
+- `Project Assets/`: Sample project files
