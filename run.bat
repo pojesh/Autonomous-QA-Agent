@@ -1,0 +1,9 @@
+@echo off
+echo Starting Backend...
+start cmd /k "uvicorn backend.main:app --reload --port 8000"
+
+echo Waiting for backend to start...
+timeout /t 5
+
+echo Starting Frontend...
+streamlit run frontend/app.py
