@@ -1,6 +1,6 @@
 # Autonomous QA Agent
 
-An intelligent, autonomous QA agent capable of constructing a "testing brain" from project documentation. It generates test cases and executable Selenium scripts using Groq LLM and Milvus vector database.
+An intelligent, autonomous QA agent capable of constructing a "testing brain" from project documentation. It generates test cases and executable Selenium scripts using Groq API - GPT-OSS-20B and zilliz cloud vector database.
 
 ---
 
@@ -113,6 +113,11 @@ You can run both the backend and frontend using the provided script:
     - Expand a test case card.
     - Click "Generate Script".
     - Copy or download the generated Python Selenium script.
+
+4.  **Run Scripts**:
+    - Modify the targer site html in the generated script in `driver.get()`.
+    - Run the test script to test the target site functionality.
+    - View the test results in the terminal.
 
 ---
 
