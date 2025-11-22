@@ -5,7 +5,11 @@ import uuid
 import streamlit.components.v1 as components
 
 # Configuration
-API_URL = "http://localhost:8000/api/v1"
+#API_URL = "http://localhost:8000/api/v1"
+#PUT THIS IN ENVIRONMENT VARIABLES
+#URL = "https://qa-agent-frontend-631020782872.asia-east2.run.app"
+URL = os.getenv("URL")
+API_URL = f"{URL}/api/v1"
 
 st.set_page_config(
     page_title="Autonomous QA Agent",
