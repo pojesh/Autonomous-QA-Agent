@@ -10,6 +10,15 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 - **Modern UI**: Built with Streamlit for a seamless user experience.
 - **Robust Backend**: FastAPI backend with modular architecture and structured logging.
 
+## Project Structure
+
+- `backend/`: FastAPI application
+    - `api/`: Routers and Schemas
+    - `core/`: Configuration and Logging
+    - `services/`: Business logic (Ingestion, RAG)
+- `frontend/`: Streamlit application
+- `Project Assets/`: Sample project files with `support_docs_description.txt` file(do not upload to knowledge base)
+
 ## Prerequisites
 
 - Python 3.9+
@@ -20,15 +29,15 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 
 1.  **Clone the repository**:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/pojesh/Autonomous-QA-Agent.git
     cd Autonomous-QA-Agent
     ```
 
 2.  **Create a virtual environment**:
     ```bash
     python -m venv venv
-    # Windows
-    .\venv\Scripts\activate
+    # Windows Powershell
+    ./venv/Scripts/Activate
     # Linux/Mac
     source venv/bin/activate
     ```
@@ -52,9 +61,9 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 
 You can run both the backend and frontend using the provided script:
 
-**Windows**:
+**Windows Powershell**:
 ```bash
-run.bat
+./run.bat
 ```
 
 **Manual Start**:
@@ -73,24 +82,38 @@ run.bat
 
 1.  **Build Knowledge Base**:
     - Go to the "Knowledge Base" page.
-    - Upload your `product_specs.md`, `ui_ux_guide.txt`, and `checkout.html`.
+    - Upload support documents `product_specs.md`, `ui_ux_guide.txt`, `accessibility_compliance.json`, `error_meesage_dictionary.json` and `api_endpoints.json`.
+    - Upload target site html `checkout.html`.
     - Click "Build Knowledge Base".
 
 2.  **Generate Test Cases**:
-    - Go to "Test Case Agent".
+    - Go to "Test Case Generation Agent".
     - Enter a query like "Generate test cases for the discount code feature".
     - View the generated test cases.
 
 3.  **Generate Scripts**:
     - Expand a test case card.
     - Click "Generate Script".
-    - Copy the generated Python Selenium script.
+    - Copy or download the generated Python Selenium script.
 
-## Project Structure
+## Usage Example
 
-- `backend/`: FastAPI application
-    - `api/`: Routers and Schemas
-    - `core/`: Configuration and Logging
-    - `services/`: Business logic (Ingestion, RAG)
-- `frontend/`: Streamlit application
-- `Project Assets/`: Sample project files
+1. Upload Documents video clip
+![Upload Docs video](videos/upload_documents.mp4)
+
+2. create knowledge base 
+![create knowledge base](videos/create_knowledge_base.mp4)
+
+3. create test cases 
+![create test cases](videos/create_test_cases.mp4)
+
+4. generate script
+![generate script](videos/generate_script.mp4)
+
+5. run scripts
+![run scripts](videos/run_scripts.mp4)
+
+## results screenshots
+
+## test site description
+
