@@ -76,6 +76,10 @@ if 'ingested_files' not in st.session_state:
     st.session_state.ingested_files = []
 if 'page' not in st.session_state:
     st.session_state.page = "Knowledge Base"
+if 'generating_script_for' not in st.session_state:
+    st.session_state.generating_script_for = None
+if 'expanded_test_case' not in st.session_state:
+    st.session_state.expanded_test_case = None
 
 def get_headers():
     return {"X-Session-ID": st.session_state.session_id}
@@ -172,6 +176,11 @@ def render_test_case_agent_page():
             
         with st.spinner("Analyzing knowledge base and generating test cases..."):
             try:
+                # Reset states
+                st.session_state.generated_test_cases = []
+                st.session_state.expanded_test_case = None
+                st.session_state.generating_script_for = None
+                
                 response = requests.post(f"{API_URL}/generation/test-cases", json={"query": query}, headers=get_headers())
                 if response.status_code == 200:
                     test_cases = response.json()
@@ -186,32 +195,61 @@ def render_test_case_agent_page():
         st.subheader("Generated Test Cases")
         
         for i, tc in enumerate(st.session_state.generated_test_cases):
-            with st.expander(f"{tc.get('test_id', 'N/A')}: {tc.get('test_scenario', 'No Scenario')} ({tc.get('test_type', 'N/A')})"):
+            test_id = tc.get('test_id', f'N/A_{i}')
+            
+            # Determine if the expander should be open
+            is_expanded = st.session_state.expanded_test_case == test_id
+
+            with st.expander(f"{test_id}: {tc.get('test_scenario', 'No Scenario')} ({tc.get('test_type', 'N/A')})", expanded=is_expanded):
                 st.markdown(f"**Feature:** {tc.get('feature', 'N/A')}")
                 st.markdown(f"**Expected Result:** {tc.get('expected_result', 'N/A')}")
                 st.markdown(f"**Grounded In:** `{tc.get('grounded_in', 'N/A')}`")
+
+                # --- SCRIPT GENERATION UI ---
+                is_generating = st.session_state.generating_script_for == test_id
                 
-                if st.button(f"Generate Script for {tc.get('test_id', 'N/A')}", key=f"btn_{i}", type="primary"):
-                    with st.spinner(f"Generating Selenium script for {tc.get('test_id', 'N/A')}..."):
+                # We use columns to place the spinner next to the button
+                btn_cols = st.columns([3, 1]) 
+
+                if is_generating:
+                    with btn_cols[0]:
+                        st.button(f"Generating Script for {test_id}...", disabled=True, key=f"generating_btn_{i}")
+                    with btn_cols[1]:
+                        # The spinner will appear here. The text is blank as the button indicates the action.
+                        st.spinner("")
+
+                    # This block runs because is_generating is true, handling the actual API call
+                    with st.spinner(f"Generating Selenium script for {test_id}..."):
                         try:
                             res = requests.post(f"{API_URL}/generation/script", json={"test_case": tc}, headers=get_headers())
                             if res.status_code == 200:
                                 script_data = res.json()
-                                st.session_state[f"script_{tc.get('test_id', 'N/A')}"] = script_data.get('script')
+                                st.session_state[f"script_{test_id}"] = script_data.get('script')
                             else:
-                                st.error(f"Error: {res.text}")
+                                st.error(f"Error generating script: {res.text}")
                         except Exception as e:
                             st.error(f"An error occurred: {str(e)}")
-                
-                if st.session_state.get(f"script_{tc.get('test_id', 'N/A')}"):
+                        finally:
+                            # Reset the generating state and rerun to update the UI
+                            st.session_state.generating_script_for = None
+                            st.rerun()
+                else:
+                    # Default state: "Generate Script" button
+                    with btn_cols[0]:
+                        if st.button(f"Generate Script for {test_id}", key=f"btn_{i}", type="primary"):
+                            # When clicked, set the states and rerun the app
+                            st.session_state.expanded_test_case = test_id
+                            st.session_state.generating_script_for = test_id
+                            st.rerun()
+
+                # --- SCRIPT DISPLAY ---
+                if st.session_state.get(f"script_{test_id}"):
                     st.markdown("### 🐍 Selenium Script")
                     
-                    script_code = st.session_state[f"script_{tc.get('test_id', 'N/A')}"]
-                    test_id = tc.get('test_id', 'N/A')
+                    script_code = st.session_state[f"script_{test_id}"]
                     test_scenario = tc.get('test_scenario', 'No Scenario')
                     file_content = f"# Test Case: {test_scenario}\n\n{script_code}"
                     
-                    # Place download button in a column to the left of the code block
                     col1, _ = st.columns([1, 4])
                     with col1:
                         st.download_button(
