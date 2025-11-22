@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "document_type": "Content Reference",
+    "version": "1.0.0",
+    "language": "en-US"
+  },
+  "validation_errors": {
+    "ERR_NAME_REQ": {
+      "field_id": "full-name",
+      "ui_text": "Name is required.",
+      "trigger": "Input is empty on submit"
+    },
+    "ERR_EMAIL_INVALID": {
+      "field_id": "email",
+      "ui_text": "Please enter a valid email address.",
+      "trigger": "Input does not match regex"
+    },
+    "ERR_ADDRESS_REQ": {
+      "field_id": "address",
+      "ui_text": "Address is required.",
+      "trigger": "Input is empty on submit"
+    },
+    "ERR_CART_EMPTY": {
+      "field_id": "global",
+      "ui_text": "Your cart is empty!",
+      "trigger": "Cart array length is 0 on submit"
+    },
+    "ERR_COUPON_INVALID": {
+      "field_id": "discount-code",
+      "ui_text": "Invalid coupon code.",
+      "trigger": "Coupon code not found in lookup"
+    }
+  },
+  "success_messages": {
+    "MSG_PAYMENT_OK": {
+      "ui_text": "Payment Successful!",
+      "trigger": "Form valid + processing complete"
+    }
+  }
+}
