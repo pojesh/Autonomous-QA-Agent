@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechGear Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for specific UI guide adherence */
+        .error-msg { color: #dc2626; font-size: 0.875rem; display: none; margin-top: 0.25rem; }
+        .input-error { border-color: #dc2626 !important; }
+        .btn-primary { background-color: #16a34a; color: white; } /* Green-600 */
+        .btn-primary:hover { background-color: #15803d; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <div class="max-w-4xl mx-auto p-6">
+        <header class="mb-8 border-b pb-4">
+            <h1 class="text-3xl font-bold text-gray-900">TechGear Checkout</h1>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Left Column: Products & Cart -->
+            <div class="space-y-6">
+                
+                <!-- Product Section -->
+                <section class="bg-white p-6 rounded-lg shadow-sm border">
+                    <h2 class="text-xl font-semibold mb-4">Available Products</h2>
+                    
+                    <!-- Product 1 -->
+                    <div class="flex justify-between items-center mb-4 pb-4 border-b">
+                        <div>
+                            <h3 class="font-medium" id="prod-1-name">Mechanical Keyboard</h3>
+                            <p class="text-gray-500">$<span id="prod-1-price">120.00</span></p>
+                        </div>
+                        <button onclick="addToCart(1, 'Mechanical Keyboard', 120)" 
+                                id="add-btn-1" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="flex justify-between items-center mb-4 pb-4 border-b">
+                        <div>
+                            <h3 class="font-medium" id="prod-2-name">Wireless Mouse</h3>
+                            <p class="text-gray-500">$<span id="prod-2-price">45.00</span></p>
+                        </div>
+                        <button onclick="addToCart(2, 'Wireless Mouse', 45)" 
+                                id="add-btn-2" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            Add to Cart
+                        </button>
+                    </div>
+
+                     <!-- Product 3 -->
+                     <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-medium" id="prod-3-name">USB-C Hub</h3>
+                            <p class="text-gray-500">$<span id="prod-3-price">30.00</span></p>
+                        </div>
+                        <button onclick="addToCart(3, 'USB-C Hub', 30)" 
+                                id="add-btn-3" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            Add to Cart
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Cart Summary -->
+                <section class="bg-white p-6 rounded-lg shadow-sm border" id="cart-section">
+                    <h2 class="text-xl font-semibold mb-4">Your Cart</h2>
+                    <div id="cart-items-container" class="space-y-3 mb-4">
+                        <p class="text-gray-400 italic" id="empty-cart-msg">Your cart is empty.</p>
+                    </div>
+                    
+                    <!-- Discount Code -->
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="discount-code" placeholder="Discount Code" 
+                               class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="applyDiscount()" id="apply-coupon" 
+                                class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
+                            Apply
+                        </button>
+                    </div>
+                    <p id="coupon-message" class="text-sm mb-2 h-5"></p>
+
+                    <!-- Totals -->
+                    <div class="border-t pt-4 space-y-2">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>$<span id="summary-subtotal">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Shipping</span>
+                            <span>$<span id="summary-shipping">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between text-green-600 font-medium" id="discount-row" style="display:none;">
+                            <span>Discount</span>
+                            <span>-$<span id="summary-discount">0.00</span></span>
+                        </div>
+                        <div class="flex justify-between text-xl font-bold mt-2 border-t pt-2">
+                            <span>Total</span>
+                            <span>$<span id="summary-total">0.00</span></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Checkout Form -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border h-fit">
+                <h2 class="text-xl font-semibold mb-6">Shipping & Payment</h2>
+                
+                <form id="checkout-form" onsubmit="handleCheckout(event)">
+                    
+                    <!-- User Details -->
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="full-name" name="fullName" 
+                                   class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <p id="error-name" class="error-msg">Name is required.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="text" id="email" name="email" 
+                                   class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <p id="error-email" class="error-msg">Please enter a valid email address.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Shipping Address</label>
+                            <textarea id="address" name="address" rows="2"
+                                      class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                            <p id="error-address" class="error-msg">Address is required.</p>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Method -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Shipping Method</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" name="shipping" id="shipping-standard" value="standard" 
+                                       class="h-4 w-4 text-blue-600" checked onchange="updateTotals()">
+                                <label for="shipping-standard" class="ml-2 text-gray-700">Standard (Free)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" name="shipping" id="shipping-express" value="express" 
+                                       class="h-4 w-4 text-blue-600" onchange="updateTotals()">
+                                <label for="shipping-express" class="ml-2 text-gray-700">Express ($10.00)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" name="payment" id="payment-cc" value="credit_card" 
+                                       class="h-4 w-4 text-blue-600" checked>
+                                <label for="payment-cc" class="ml-2 text-gray-700">Credit Card</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" name="payment" id="payment-paypal" value="paypal" 
+                                       class="h-4 w-4 text-blue-600">
+                                <label for="payment-paypal" class="ml-2 text-gray-700">PayPal</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="pay-now-btn" 
+                            class="w-full btn-primary font-bold py-3 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Pay Now
+                    </button>
+                    
+                    <!-- Success Message Area -->
+                    <div id="success-message" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded text-center font-bold">
+                        Payment Successful!
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let cart = {};
+        let activeDiscount = null;
+
+        // Constants (Mocking backend logic on frontend for the sake of the HTML file)
+        const DISCOUNTS = {
+            'SAVE15': { type: 'percent', value: 0.15 },
+            'FREESHIP': { type: 'shipping', value: 0 }
+        };
+
+        function addToCart(id, name, price) {
+            if (cart[id]) {
+                cart[id].qty += 1;
+            } else {
+                cart[id] = { name, price, qty: 1 };
+            }
+            renderCart();
+            updateTotals();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            
+            if (Object.keys(cart).length === 0) {
+                container.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            container.innerHTML = '';
+
+            Object.entries(cart).forEach(([id, item]) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center text-sm';
+                div.innerHTML = `
+                    <span>${item.name} <span class="text-gray-500">x <input type="number" min="1" value="${item.qty}" onchange="updateQty(${id}, this.value)" class="w-12 border rounded pl-1"></span></span>
+                    <span>$${(item.price * item.qty).toFixed(2)}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateQty(id, newQty) {
+            if (newQty < 1) {
+                delete cart[id];
+            } else {
+                cart[id].qty = parseInt(newQty);
+            }
+            renderCart();
+            updateTotals();
+        }
+
+        function getSubtotal() {
+            return Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+        }
+
+        function getShippingCost() {
+            const isExpress = document.getElementById('shipping-express').checked;
+            let cost = isExpress ? 10.00 : 0.00;
+            
+            // Logic for FREESHIP coupon
+            if (activeDiscount === 'FREESHIP') {
+                cost = 0;
+            }
+            return cost;
+        }
+
+        function applyDiscount() {
+            const codeInput = document.getElementById('discount-code');
+            const messageEl = document.getElementById('coupon-message');
+            const code = codeInput.value.trim();
+
+            if (DISCOUNTS.hasOwnProperty(code)) {
+                activeDiscount = code;
+                messageEl.textContent = `Coupon '${code}' applied!`;
+                messageEl.className = "text-sm mb-2 h-5 text-green-600 font-medium";
+                updateTotals();
+            } else {
+                activeDiscount = null;
+                messageEl.textContent = "Invalid coupon code.";
+                messageEl.className = "text-sm mb-2 h-5 text-red-600 font-medium";
+                updateTotals();
+            }
+        }
+
+        function updateTotals() {
+            const subtotal = getSubtotal();
+            const shipping = getShippingCost();
+            let discountAmt = 0;
+
+            if (activeDiscount === 'SAVE15') {
+                discountAmt = subtotal * 0.15;
+            }
+
+            const total = subtotal + shipping - discountAmt;
+
+            // DOM Updates
+            document.getElementById('summary-subtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('summary-shipping').textContent = shipping.toFixed(2);
+            
+            const discRow = document.getElementById('discount-row');
+            if (discountAmt > 0) {
+                discRow.style.display = 'flex';
+                document.getElementById('summary-discount').textContent = discountAmt.toFixed(2);
+            } else {
+                discRow.style.display = 'none';
+            }
+
+            document.getElementById('summary-total').textContent = total.toFixed(2);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const name = document.getElementById('full-name');
+            const email = document.getElementById('email');
+            const address = document.getElementById('address');
+            
+            // Reset styles
+            [name, email, address].forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+
+            // Name Validation
+            if (name.value.trim() === '') {
+                document.getElementById('error-name').style.display = 'block';
+                name.classList.add('input-error');
+                isValid = false;
+            }
+
+            // Email Validation (Simple regex)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                document.getElementById('error-email').style.display = 'block';
+                email.classList.add('input-error');
+                isValid = false;
+            }
+
+            // Address Validation
+            if (address.value.trim() === '') {
+                document.getElementById('error-address').style.display = 'block';
+                address.classList.add('input-error');
+                isValid = false;
+            }
+
+            // Cart Validation
+            if (Object.keys(cart).length === 0) {
+                alert("Your cart is empty!");
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function handleCheckout(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                // Simulate network request
+                const btn = document.getElementById('pay-now-btn');
+                const originalText = btn.innerText;
+                btn.innerText = "Processing...";
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    document.getElementById('success-message').classList.remove('hidden');
+                    // Clear cart logic could go here
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
