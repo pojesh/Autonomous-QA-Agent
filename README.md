@@ -99,19 +99,34 @@ You can run both the backend and frontend using the provided script:
 ## Usage Example
 
 1. Upload Documents video clip
-<img src="videos/upload_documents.mp4" alt="upload docs" width="300" />
+<video>
+  <source src='./videos/upload_documents.mp4' type='video/mp4'>
+  Your browser does not support the video tag.
+</video>
 
 2. create knowledge base 
-<img src="videos/create_knowledge_base.mp4" alt="create knowledge base" width="300" />
+<video>
+  <source src='./videos/create_knowledge_base.mp4' type='video/mp4'>
+  Your browser does not support the video tag.
+</video>
 
 3. create test cases 
-<img src="videos/create_test_cases.mp4" alt="create test cases" width="300" />
+<video>
+  <source src='./videos/create_test_cases.mp4' type='video/mp4'>
+  Your browser does not support the video tag.
+</video>
 
 4. generate script
-<img src="videos/generate_script.mp4" alt="generate script" width="300" />
+<video>
+  <source src='./videos/generate_script.mp4' type='video/mp4'>
+  Your browser does not support the video tag.
+</video>
 
 5. run scripts
-<img src="videos/run_scripts.mp4" alt="run scripts" width="300" />
+<video>
+  <source src='./videos/run_scripts.mp4' type='video/mp4'>
+  Your browser does not support the video tag.
+</video>
 
 ## results screenshots
 
