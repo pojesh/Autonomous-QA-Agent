@@ -1,0 +1,41 @@
+These files represent the "Knowledge Base" the agent will ingest to understand how the checkout.html application is supposed to behave.
+
+1. product_specs.md (Business Logic)
+Purpose: Defines the core business rules, pricing models, and functional limits of the application.
+
+Key Contents:
+Inventory: specific prices for products (e.g., Mechanical Keyboard is $120).
+Discount Logic: Exact rules for codes like SAVE15 (15% off) and FREESHIP.
+Shipping: Cost difference between Standard ($0) and Express ($10).
+Constraints: Limits on cart quantity (max 10 units).
+
+2. ui_ux_guide.txt (Visual Standards)
+Purpose: Establishes the visual design language and expected user interface behaviors. Used for UI assertion testing.
+
+Key Contents:
+Color Palette: Specific Hex codes for buttons (Green-600), errors (Red-600), and hover states.
+Behavior: How buttons should react when clicked (e.g., "Processing..." state).
+Feedback: Exact requirements for how success messages and error borders should appear.
+
+3. api_endpoints.json (Backend Contract)
+Purpose: A mock definition of the backend API. This allows the agent to generate tests that verify if the frontend sends the correct JSON payloads.
+
+Key Contents:
+Endpoints: Definitions for /cart/validate-coupon and /orders/submit.
+Schema: Required fields (name, email, address) and data types.
+Responses: Expected status codes (200, 201, 400, 404) and response bodies.
+
+4. accessibility_compliance.md (A11y Standards)
+Purpose: Defines the Web Content Accessibility Guidelines (WCAG 2.1) that the page must adhere to.
+
+Key Contents:
+Focus Management: Requirements for visible focus rings on inputs.
+ARIA Attributes: Rules for using role="alert" and aria-describedby.
+Navigation: Logical tab order expectations for keyboard users.
+
+5. error_message_dictionary.json (Content Source of Truth)
+Purpose: A centralized dictionary mapping error codes to specific UI text. This ensures the agent verifies the exact wording of messages, not just their presence.
+
+Key Contents:
+Mappings: Links abstract keys like ERR_EMAIL_INVALID to user-facing text: "Please enter a valid email address."
+Triggers: Explains exactly what user action causes each message to fire.
