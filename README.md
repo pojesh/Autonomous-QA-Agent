@@ -98,35 +98,28 @@ You can run both the backend and frontend using the provided script:
 
 ## Usage Example
 
-1. Upload Documents video clip
-<video>
-  <source src='./videos/upload_documents.mp4' type='video/mp4'>
-  Your browser does not support the video tag.
-</video>
+1. Upload documents
 
-2. create knowledge base 
-<video>
-  <source src='./videos/create_knowledge_base.mp4' type='video/mp4'>
-  Your browser does not support the video tag.
-</video>
 
-3. create test cases 
-<video>
-  <source src='./videos/create_test_cases.mp4' type='video/mp4'>
-  Your browser does not support the video tag.
-</video>
 
-4. generate script
-<video>
-  <source src='./videos/generate_script.mp4' type='video/mp4'>
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/4c5cd0a5-c9c1-430b-822e-0bb4a7820ba6
 
-5. run scripts
-<video>
-  <source src='./videos/run_scripts.mp4' type='video/mp4'>
-  Your browser does not support the video tag.
-</video>
+
+2. Create knowledge base 
+
+
+https://github.com/user-attachments/assets/f19900cb-09bc-4604-bd12-a20bdd9869ee
+
+
+
+3. Create test cases 
+
+
+4. Generate script
+
+
+5. Run scripts
+
 
 ## results screenshots
 
