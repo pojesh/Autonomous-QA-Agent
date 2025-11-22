@@ -35,7 +35,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 async def health_check():
     return {"status": "healthy", "version": settings.VERSION}
 
-# Import and include routers (will be added later)
+# Import and include routers 
 from backend.api.routers import ingestion, generation, session
 app.include_router(ingestion.router, prefix=f"{settings.API_PREFIX}/ingestion", tags=["Ingestion"])
 app.include_router(generation.router, prefix=f"{settings.API_PREFIX}/generation", tags=["Generation"])
