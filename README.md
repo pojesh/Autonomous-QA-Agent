@@ -96,32 +96,12 @@ You can run both the backend and frontend using the provided script:
     - Click "Generate Script".
     - Copy or download the generated Python Selenium script.
 
-## Usage Example
-
-1. Upload documents
+## DEMONSTRATION
 
 
-
-https://github.com/user-attachments/assets/4c5cd0a5-c9c1-430b-822e-0bb4a7820ba6
-
-
-2. Create knowledge base 
+https://github.com/user-attachments/assets/75d48044-0e69-44f7-8c85-c32a52f7217c
 
 
-https://github.com/user-attachments/assets/f19900cb-09bc-4604-bd12-a20bdd9869ee
-
-
-
-3. Create test cases 
-
-
-4. Generate script
-
-
-5. Run scripts
-
-
-## results screenshots
 
 ## Project Assets
 
