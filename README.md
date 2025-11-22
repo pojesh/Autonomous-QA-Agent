@@ -99,7 +99,7 @@ You can run both the backend and frontend using the provided script:
 ## Usage Example
 
 1. Upload Documents video clip
-<video src="videos/upload_documents.mp4" alt="upload docs" width="300" />
+<img src="videos/upload_documents.mp4" alt="upload docs" width="300" />
 
 2. create knowledge base 
 <img src="videos/create_knowledge_base.mp4" alt="create knowledge base" width="300" />
