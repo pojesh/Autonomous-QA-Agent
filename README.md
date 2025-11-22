@@ -99,19 +99,19 @@ You can run both the backend and frontend using the provided script:
 ## Usage Example
 
 1. Upload Documents video clip
-![Upload Docs video](videos/upload_documents.mp4)
+<video src="videos/upload_documents.mp4" alt="upload docs" width="300" />
 
 2. create knowledge base 
-![create knowledge base](videos/create_knowledge_base.mp4)
+<img src="videos/create_knowledge_base.mp4" alt="create knowledge base" width="300" />
 
 3. create test cases 
-![create test cases](videos/create_test_cases.mp4)
+<img src="videos/create_test_cases.mp4" alt="create test cases" width="300" />
 
 4. generate script
-![generate script](videos/generate_script.mp4)
+<img src="videos/generate_script.mp4" alt="generate script" width="300" />
 
 5. run scripts
-![run scripts](videos/run_scripts.mp4)
+<img src="videos/run_scripts.mp4" alt="run scripts" width="300" />
 
 ## results screenshots
 
