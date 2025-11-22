@@ -7,5 +7,5 @@ venv/
 # python cache folder
 __pycache__
 
-
+sessions/
 
