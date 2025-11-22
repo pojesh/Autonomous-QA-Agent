@@ -124,22 +124,22 @@ https://github.com/user-attachments/assets/75d48044-0e69-44f7-8c85-c32a52f7217c
 
 ## Screenshots
 
-### Ingest Files
+- ### Ingest Files
 ![Ingest Files](screenshots/ingest_files.png)
 
-### Zilliz Vector Store Collection
+- ### Zilliz Vector Store Collection
 ![Zilliz Vector Store Collection](screenshots/zilliz_vector_store_collection.png)
 
-### Test Cases Generation
+- ### Test Cases Generation
 ![Test Cases Generation](screenshots/test_cases.png)
 
-### Generated Script for a Test Case
+- ### Generated Script for a Test Case
 ![Generated Script for a Test Case](screenshots/generated_script.png)
 
-### Backend Logs Terminal
+- ### Backend Logs Terminal
 ![Backend Terminal Logs](screenshots/backend_logs.png)
 
-### GPT-OSS-20B Groq Dashboard
+- ### GPT-OSS-20B Groq Dashboard
 ![GPT-OSS-20B Groq Dashboard](screenshots/groq_dashboard.png)
 
 ---
