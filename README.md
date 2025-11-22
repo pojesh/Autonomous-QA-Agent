@@ -2,6 +2,8 @@
 
 An intelligent, autonomous QA agent capable of constructing a "testing brain" from project documentation. It generates test cases and executable Selenium scripts using Groq LLM and Milvus vector database.
 
+---
+
 ## Features
 
 - **Knowledge Base Ingestion**: Upload PDF, Markdown, JSON, HTML files to build a vector knowledge base.
@@ -10,6 +12,14 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 - **Modern UI**: Built with Streamlit for a seamless user experience.
 - **Robust Backend**: FastAPI backend with modular architecture and structured logging.
 
+---
+
+## Deployment
+
+This project is hosted on Google Cloud - [https://qa-agent-frontend-631020782872.europe-west2.run.app/](https://qa-agent-frontend-631020782872.europe-west2.run.app/)
+
+---
+
 ## Project Structure
 
 - `backend/`: FastAPI application
@@ -17,13 +27,17 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
     - `core/`: Configuration and Logging
     - `services/`: Business logic (Ingestion, RAG)
 - `frontend/`: Streamlit application
-- `Project Assets/`: Sample project files with `support_docs_description.txt` file(do not upload to knowledge base)
+- `Project Assets/`: Sample project files
+
+---
 
 ## Prerequisites
 
 - Python 3.9+
 - [Groq API Key](https://console.groq.com/)
 - [Milvus Zilliz Cloud](https://zilliz.com/) (URI and Token)
+
+---
 
 ## Setup
 
@@ -57,6 +71,8 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
         LOG_LEVEL=INFO
         ```
 
+---
+
 ## Running the Application
 
 You can run both the backend and frontend using the provided script:
@@ -78,6 +94,8 @@ You can run both the backend and frontend using the provided script:
     streamlit run frontend/app.py
     ```
 
+---
+
 ## Usage
 
 1.  **Build Knowledge Base**:
@@ -96,12 +114,35 @@ You can run both the backend and frontend using the provided script:
     - Click "Generate Script".
     - Copy or download the generated Python Selenium script.
 
-## DEMONSTRATION
+---
 
+## Demonstration
 
 https://github.com/user-attachments/assets/75d48044-0e69-44f7-8c85-c32a52f7217c
 
+---
 
+## Screenshots
+
+### Ingest Files
+![Ingest Files](screenshots/ingest_files.png)
+
+### Zilliz Vector Store Collection
+![Zilliz Vector Store Collection](screenshots/zilliz_vector_store_collection.png)
+
+### Test Cases Generation
+![Test Cases Generation](screenshots/test_cases.png)
+
+### Generated Script for a Test Case
+![Generated Script for a Test Case](screenshots/generated_script.png)
+
+### Backend Logs Terminal
+![Backend Terminal Logs](screenshots/backend_logs.png)
+
+### GPT-OSS-20B Groq Dashboard
+![GPT-OSS-20B Groq Dashboard](screenshots/groq_dashboard.png)
+
+---
 
 ## Project Assets
 
