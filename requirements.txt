@@ -16,7 +16,8 @@ selenium
 webdriver-manager
 pytest
 httpx
-sentence-transformers
 langchain-milvus
+sentence-transformers
 python-multipart
 markdown
+uuid
