@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import os
+import uuid
+import streamlit.components.v1 as components
 
 # Configuration
 API_URL = "http://localhost:8000/api/v1"
@@ -66,13 +68,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Session State Initialization
+if 'session_id' not in st.session_state:
+    sess = str(uuid.uuid4())
+    sess = sess.replace("-", "")
+    st.session_state.session_id = sess
 if 'ingested_files' not in st.session_state:
     st.session_state.ingested_files = []
 if 'page' not in st.session_state:
     st.session_state.page = "Knowledge Base"
 
+def get_headers():
+    return {"X-Session-ID": st.session_state.session_id}
+
 def main():
     st.markdown('<h1 class="main-header">🤖 Autonomous QA Agent</h1>', unsafe_allow_html=True)
+    st.caption(f"Session ID: {st.session_state.session_id}")
     
     # Navigation buttons
     col1, col2 = st.columns(2)
@@ -84,6 +94,19 @@ def main():
             st.session_state.page = "Test Cases"
     
     st.markdown("---")
+
+    # JavaScript for Auto-Cleanup on Tab Close
+    cleanup_script = f"""
+    <script>
+        window.addEventListener('beforeunload', function (e) {{
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "{API_URL}/session/cleanup", true);
+            xhr.setRequestHeader("X-Session-ID", "{st.session_state.session_id}");
+            xhr.send();
+        }});
+    </script>
+    """
+    components.html(cleanup_script, height=0)
 
     # Page rendering
     if st.session_state.page == "Knowledge Base":
@@ -112,7 +135,7 @@ def render_knowledge_base_page():
                 files_payload.append(('files', (file.name, file.getvalue(), file.type)))
             
             try:
-                response = requests.post(f"{API_URL}/ingestion/upload", files=files_payload)
+                response = requests.post(f"{API_URL}/ingestion/upload", files=files_payload, headers=get_headers())
                 if response.status_code == 200:
                     results = response.json()
                     success_count = sum(1 for r in results if r['status'] == 'success')
@@ -149,7 +172,7 @@ def render_test_case_agent_page():
             
         with st.spinner("Analyzing knowledge base and generating test cases..."):
             try:
-                response = requests.post(f"{API_URL}/generation/test-cases", json={"query": query})
+                response = requests.post(f"{API_URL}/generation/test-cases", json={"query": query}, headers=get_headers())
                 if response.status_code == 200:
                     test_cases = response.json()
                     st.session_state.generated_test_cases = test_cases
@@ -171,7 +194,7 @@ def render_test_case_agent_page():
                 if st.button(f"Generate Script for {tc.get('test_id', 'N/A')}", key=f"btn_{i}", type="primary"):
                     with st.spinner(f"Generating Selenium script for {tc.get('test_id', 'N/A')}..."):
                         try:
-                            res = requests.post(f"{API_URL}/generation/script", json={"test_case": tc})
+                            res = requests.post(f"{API_URL}/generation/script", json={"test_case": tc}, headers=get_headers())
                             if res.status_code == 200:
                                 script_data = res.json()
                                 st.session_state[f"script_{tc.get('test_id', 'N/A')}"] = script_data.get('script')

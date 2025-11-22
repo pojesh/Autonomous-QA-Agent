@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List, Dict, Any
 from langchain_groq import ChatGroq
 from langchain_core.output_parsers import JsonOutputParser
@@ -17,10 +18,11 @@ def get_llm():
         api_key=settings.GROQ_API_KEY
     )
 
-async def generate_test_cases(query: str) -> List[Dict[str, Any]]:
-    logger.info(f"Generating test cases for query: {query}")
+async def generate_test_cases(query: str, session_id: str) -> List[Dict[str, Any]]:
+    logger.info(f"Generating test cases for query: {query} in session: {session_id}")
     
-    vector_store = get_vector_store()
+    collection_name = f"session_{session_id}"
+    vector_store = get_vector_store(collection_name=collection_name)
     retriever = vector_store.as_retriever(search_kwargs={"k": 5})
     
     llm = get_llm()
@@ -47,23 +49,38 @@ async def generate_test_cases(query: str) -> List[Dict[str, Any]]:
         if isinstance(test_cases, dict):
             test_cases = [test_cases]
             
+        logger.info(f"Generated {len(test_cases)} test cases for session {session_id}")
         return test_cases
     except Exception as e:
         logger.error(f"Error generating test cases: {e}", exc_info=True)
         raise e
 
-async def generate_selenium_script(test_case: Dict[str, Any]) -> str:
-    logger.info(f"Generating script for test case: {test_case.get('test_id')}")
+async def generate_selenium_script(test_case: Dict[str, Any], session_id: str) -> str:
+    logger.info(f"Generating script for test case: {test_case.get('test_id')} in session: {session_id}")
     
-    vector_store = get_vector_store()
+    collection_name = f"session_{session_id}"
+    vector_store = get_vector_store(collection_name=collection_name)
     
-    # Retrieve HTML context (specifically looking for checkout.html or similar)
-    # We might want to retrieve everything or specific HTML chunks.
-    # For now, let's retrieve based on "HTML structure" or "checkout page"
-    html_docs = vector_store.similarity_search("checkout.html HTML structure form inputs buttons", k=3)
-    html_context = "\n\n".join([doc.page_content for doc in html_docs])
+    # Try to load full HTML from session storage
+    session_dir = os.path.join("backend", "sessions", session_id)
+    html_context = ""
     
-    # Retrieve other relevant docs
+    if os.path.exists(session_dir):
+        for filename in os.listdir(session_dir):
+            if filename.lower().endswith(".html"):
+                try:
+                    with open(os.path.join(session_dir, filename), 'r', encoding='utf-8') as f:
+                        html_context += f"\n\n--- FILE: {filename} ---\n{f.read()}"
+                except Exception as e:
+                    logger.error(f"Error reading HTML file {filename}: {e}")
+
+    # If no HTML found on disk, fallback to vector store (though ingestion should have saved it)
+    if not html_context:
+        logger.warning("No HTML file found in session storage, falling back to vector search.")
+        html_docs = vector_store.similarity_search("checkout.html HTML structure form inputs buttons", k=3)
+        html_context = "\n\n".join([doc.page_content for doc in html_docs])
+    
+    # Retrieve other relevant docs (specs, guides)
     doc_docs = vector_store.similarity_search(str(test_case), k=3)
     doc_context = "\n\n".join([doc.page_content for doc in doc_docs])
     
@@ -86,7 +103,9 @@ async def generate_selenium_script(test_case: Dict[str, Any]) -> str:
         elif "```" in content:
             content = content.split("```")[1].split("```")[0]
             
-        return content.strip()
+        script_content = content.strip()
+        logger.info(f"Generated script for {test_case.get('test_id')} in session {session_id}")
+        return script_content
     except Exception as e:
         logger.error(f"Error generating script: {e}", exc_info=True)
         raise e
