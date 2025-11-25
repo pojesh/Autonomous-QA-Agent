@@ -16,7 +16,8 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 
 ## Deployment
 
-This project is hosted on Google Cloud - [https://qa-agent-frontend-631020782872.europe-west2.run.app/](https://qa-agent-frontend-631020782872.europe-west2.run.app/)
+This project is deployed on Google Cloud - [https://qa-agent-frontend-631020782872.europe-west2.run.app/](https://qa-agent-frontend-631020782872.europe-west2.run.app/)
+(Note: Ingestion might take a while to complete)
 
 ---
 
