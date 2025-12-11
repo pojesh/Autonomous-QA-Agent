@@ -4,6 +4,12 @@ An intelligent, autonomous QA agent capable of constructing a "testing brain" fr
 
 ---
 
+## Architecture
+<img width="2391" height="257" alt="oceanarch2" src="https://github.com/user-attachments/assets/87e7f187-8117-4c54-b538-c8cd1b7054be" />
+
+
+---
+
 ## Features
 
 - **Knowledge Base Ingestion**: Upload PDF, Markdown, JSON, HTML files to build a vector knowledge base.
